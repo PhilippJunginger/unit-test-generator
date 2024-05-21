@@ -1,0 +1,44 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+    "plugin:prettier/recommended" // Enables eslint-plugin-prettier and displays prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+  ],
+  "rules": {
+    "@typescript-eslint/naming-convention": "warn",
+    "@typescript-eslint/semi": "warn",
+    "curly": "warn",
+    "eqeqeq": "warn",
+    "no-throw-literal": "warn",
+    "semi": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "all",
+        "singleQuote": true,
+        "tabWidth": 4,
+        "semi": true,
+        "printWidth": 120,
+        "quoteProps": "as-needed",
+        "bracketSpacing": true,
+        "jsxSingleQuote": true,
+        "bracketSameLine": true,
+        "endOfLine": "auto",
+        "arrowParens": "always",
+        "htmlWhitespaceSensitivity": "css",
+        "embeddedLanguageFormatting": "auto",
+        "singleAttributePerLine": false
+      }
+    ]
+  },
+  "ignorePatterns": [
+    "webview-ui/**",
+    "node_modules"
+  ]
+}
