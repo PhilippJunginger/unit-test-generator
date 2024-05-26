@@ -1,16 +1,23 @@
-import { vscode } from "./utilities/vscode";
-import { VSCodeButton, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react";
-import "./App.css";
+import { VSCodeButton, VSCodeDropdown, VSCodeOption, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react";
 import { ChangeEvent, useState } from "react";
+import "./App.css";
+import { vscode } from "./utilities/vscode";
+
+enum KI_TYPE {
+  CHAT_GPT = 'ChatGPT',
+  CLAUDE = 'Claude',
+  GEMINI = 'Gemini'
+}
 
 function App() {
 
-  const [shots, setShots] = useState<string[]>([]);
+  const [shots, setShots] = useState<string[]>(['']);
+  const [selectedKI, setSelectedKI] = useState<KI_TYPE>(KI_TYPE.CHAT_GPT);
 
   const handleHowdyClick = () => {
     console.log(shots[0])
     vscode.postMessage({
-      command: "sendPrompt",
+      kiType: selectedKI,
       text: shots[0],
     });
   }
@@ -19,12 +26,20 @@ function App() {
     setShots([...shots, ''])
   }
 
+  const handleKiSelection = (selectedKi: KI_TYPE) => {
+    setSelectedKI(selectedKI);
+  }
+
   const handleRemoveShot = () => {
     const shotsToUpdate = [...shots];
 
-    shotsToUpdate.pop();
+    if (shotsToUpdate.length === 1) {
+      setShots(['']);
+      return;
+    }
 
-    setShots([...shotsToUpdate])
+    shotsToUpdate.pop();
+    setShots(shotsToUpdate);
   }
 
   const handleShotInputChange = (event: ChangeEvent<HTMLTextAreaElement>, shotIndex: number) => {
@@ -40,6 +55,15 @@ function App() {
       <h1>Generate Unit-Test</h1>
 
 
+      <div className="dropdown-container">
+        <label htmlFor='dropdown'>KI-Modell</label>
+        <VSCodeDropdown id="dropdown" value={selectedKI}>
+          {
+            Object.values(KI_TYPE).map((ki) => <VSCodeOption value={ki} onClick={() => handleKiSelection(ki)}>{ki}</VSCodeOption>)
+          }
+        </VSCodeDropdown>
+      </div>    
+
 
       <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '16px' }}>
         <h4>Prompt Shots</h4>
@@ -54,7 +78,7 @@ function App() {
         </div>
       </div>
 
-      <VSCodeButton onClick={handleHowdyClick}>Howdy!</VSCodeButton>
+      <VSCodeButton onClick={handleHowdyClick}>Generate!</VSCodeButton>
     </main>
   );
 }
